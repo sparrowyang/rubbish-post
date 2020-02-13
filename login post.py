@@ -82,7 +82,6 @@ def hahaha(times=10):
 #使用post提交的网站
 #开始post 设置 提交次数 默认10此
 def StartPost(times=10):
-    #url ="http://sparrow123.xyz/admin/check.php"
     url ="http://localhost/test.php"
     for i in range(times):
         id = GetID()
