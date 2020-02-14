@@ -1,6 +1,7 @@
 import requests
 import random
 import string
+import randomword
 from urllib.request import Request,urlopen
 import time
 
@@ -40,17 +41,22 @@ def PhonePassword(Nlen=10,Llen=3):
     return num + ltr
 
 #生成随机单词
-def GetWord():
+def GetWordFromCSV():
     with open("words.csv") as file:
         words = file.readlines()
         word = random.choice(words)
         word = word.replace(',\n',' ')
         return word
 
+#生成随机单词
+def GetWordFromPackage():
+    word = randomword.get_random_word()
+    return word
+
 #生成数字+单词密码
 def NumAndWord():
     id = random.randint(10000, 100000000)
-    password = GetWord()
+    password = GetWordFromPackage()
     return str(id) + password
 
 #生成以上混合格式密码
@@ -67,37 +73,55 @@ def GetAllKindPassword():
 #         提交垃圾数据函数
 #====================================
 
+#POST问候
+def Greetings(times=10):
+    #目标
+    url = "http://support.1longjia.cn/2017.php"
+    for i in range(times):
+        #获取问候
+        greetings = urlopen('https://nmsl.shadiao.app/api.php?level=min').read().decode('utf-8')
+        params = {"u": greetings, "p": greetings}
+        html = requests.post(url, data=params)
+        print(html.text)
+        print(greetings,'问候已送出')
+    print('共提交', times, '条问候到', url)
 
 #对于低端钓鱼网站
 #直接在链接后跟参数的网站
 def hahaha(times=10):
     for i in range(times):
         id = GetID()
-        password = RegularPassword()
-        url = "http://7x24e.com/dnf.php?u="+str(id)+"&p="+password
+        password = GetAllKindPassword()
+        #greetings = urlopen('https://nmsl.shadiao.app/api.php?level=min').read().decode('utf-8')
+        #print(greetings)
+        url = "http://qqphoto.7766.org:81/dnf.php?u="+str(id)+"&p="+password
+        #url = "http://612219.com/dnf.php?u="+str(id)+"&p="+password
         response = urlopen(url)
         print(response)
-        time.sleep(3)
+        #Xtime.sleep(1)
     
 #使用post提交的网站
 #开始post 设置 提交次数 默认10此
 def StartPost(times=10):
-    url ="http://localhost/test.php"
+    url ="http://support.1longjia.cn/2017.php"
     for i in range(times):
         id = GetID()
         password =  GetAllKindPassword()
-        params = {"username":id, "password":password}
-        #params = {"u":id,"p":password}
+        #params = {"account":id,"password":password }
+        #params = {"username":id, "password":password}
+        params = {"u":id,"p":password}
         #params = {"code": "upload "}
         html = requests.post(url,data=params)
-        i=i+1
-        print(html.text)
+        print(html)
+        #print('NO.',i,id,password,'post success!')
+    print('共提交',times,'条数据到',url)
+
 
 #====================================
 #          开始提交垃圾数据
 #====================================
 
-StartPost(500)
+hahaha(100)
 
 
         
