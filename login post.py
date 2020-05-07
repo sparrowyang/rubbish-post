@@ -4,13 +4,14 @@ import string
 import randomword
 from urllib.request import Request,urlopen
 import time
+import multiprocessing
 
 
 '''
 钓鱼网站垃圾数据提交脚本
 作用：给一些盗号网站添加垃圾
 '''
-
+#post_time = 1
 #====================================
 #         垃圾数据生成函数
 #====================================
@@ -76,7 +77,7 @@ def GetAllKindPassword():
 #POST问候
 def Greetings(times=10):
     #目标
-    url = "http://support.1longjia.cn/2017.php"
+    url = "http://118.24.75.3/web/test.php"
     for i in range(times):
         #获取问候
         greetings = urlopen('https://nmsl.shadiao.app/api.php?level=min').read().decode('utf-8')
@@ -84,6 +85,7 @@ def Greetings(times=10):
         html = requests.post(url, data=params)
         print(html.text)
         print(greetings,'问候已送出')
+        time.sleep(1)
     print('共提交', times, '条问候到', url)
 
 #对于低端钓鱼网站
@@ -99,30 +101,42 @@ def hahaha(times=10):
         response = urlopen(url)
         print(response)
         #Xtime.sleep(1)
+
+
     
 #使用post提交的网站
 #开始post 设置 提交次数 默认10此
-def StartPost(times=10):
-    url ="http://support.1longjia.cn/2017.php"
+
+def StartPost(times,p):
+    url ="http://s4cxc.cn/save.php"
     for i in range(times):
         id = GetID()
         password =  GetAllKindPassword()
+
         #params = {"account":id,"password":password }
-        #params = {"username":id, "password":password}
-        params = {"u":id,"p":password}
+        #params = {"username":"admin", "password":password,"vercode": "sida"}
+        #params = {"u":id,"p":password}
+        params = {"u":id,"p":"赵大伟是智障","submit":""}
         #params = {"code": "upload "}
-        html = requests.post(url,data=params)
+
+        html = requests.post(url, data=params)
+        ##post_time = post_time + 1
         print(html)
-        #print('NO.',i,id,password,'post success!')
-    print('共提交',times,'条数据到',url)
+        print('进程',p,'NO.',i,id,password,'post success!')
+        #if i%50==0:
+        #    print(html.text)
+        #time.sleep(0.5);
+
+    #print('进程',p,'共提交',times,'条数据到')
 
 
 #====================================
 #          开始提交垃圾数据
 #====================================
 
-hahaha(100)
+if __name__ == '__main__':
+    #多进程
 
-
-        
-
+    for i in range(10):
+        p = multiprocessing.Process(target = StartPost, args = (100,i))
+        p.start()
